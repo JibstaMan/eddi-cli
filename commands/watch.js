@@ -1,7 +1,7 @@
 const path = require('path');
 const chokidar = require('chokidar')
 const askQuestions = require('../lib/askQuestions');
-const getLocalPersonalities = require('../lib/getLocalPersonalities');
+const { getPersonalityOption } = require('../lib/getLocalPersonalities');
 const readJson = require('../lib/readJson');
 const buildPersonality = require('../lib/buildPersonality');
 const log = require('../lib/log');
@@ -13,15 +13,12 @@ exports.command = 'watch';
 exports.describe = 'Watch the personalities for changes and immediately build them';
 
 async function getOpts() {
-  const personalities = await getLocalPersonalities(process.cwd());
+  const personality = await getPersonalityOption();
   return {
     personality: {
-      alias: 'p',
+      ...personality,
       desc: 'Only watch for changes within this personality',
-      type: 'string',
-      choices: personalities,
       group: 'Watch options:',
-      requestArg: true,
     },
   };
 }

@@ -1,5 +1,5 @@
 const askQuestions = require('../lib/askQuestions');
-const getLocalPersonalities = require('../lib/getLocalPersonalities');
+const { getPersonalityOption } = require('../lib/getLocalPersonalities');
 const buildPersonality = require('../lib/buildPersonality');
 const log = require('../lib/log');
 
@@ -8,15 +8,12 @@ exports.command = 'build';
 exports.describe = 'Build the EDDI personality JSON from the source files';
 
 async function getOpts() {
-  const personalities = await getLocalPersonalities(process.cwd());
+  const personality = await getPersonalityOption();
   return {
     personality: {
-      alias: 'p',
+      ...personality,
       desc: 'The personality to build',
-      type: 'string',
-      choices: personalities,
       group: 'Build options:',
-      requestArg: true,
     },
   };
 }
