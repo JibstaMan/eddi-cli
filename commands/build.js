@@ -31,10 +31,7 @@ exports.handler = async function (argv) {
   const args = await askQuestions(argv, opts);
 
   log();
-  log.verbose(Object.keys(opts).reduce((acc, key) => {
-    return acc + `\n${key}: ${args[key]}`;
-  }, 'Options:'));
-  log.verbose();
+  log.options(args, opts);
 
   log(`Building personality "${args.personality}"`);
 

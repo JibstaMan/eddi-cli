@@ -36,10 +36,7 @@ exports.handler = async function (argv) {
   const args = await askQuestions(argv, OPTS);
 
   log();
-  log.verbose(Object.keys(OPTS).reduce((acc, key) => {
-    return acc + `\n${key}: ${args[key]}`;
-  }, 'Options:'));
-  log.verbose();
+  log.options(args, OPTS);
 
   await fs.copyFile(path.resolve(__dirname, '../template/README.md'), path.join(process.cwd(), 'README.md'));
 
@@ -49,7 +46,7 @@ exports.handler = async function (argv) {
   }
 
   log('Reading personalities');
-  const personalities = await getPersonalities();
+  const personalities = await getEddiPersonalities();
 
   log('Writing personalities');
   await Object.values(personalities).reduce((p, personality) => {
