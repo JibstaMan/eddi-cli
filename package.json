@@ -18,6 +18,11 @@
     "cli"
   ],
   "author": "JibstaMan",
+  "homepage": "https://github.com/JibstaMan/eddi-cli#readme",
+  "repository": "github:JibstaMan/eddi-cli",
+  "bugs": {
+    "url": "https://github.com/JibstaMan/eddi-cli/issues"
+  },
   "license": "MIT",
   "dependencies": {
     "chokidar": "^3.5.1",
