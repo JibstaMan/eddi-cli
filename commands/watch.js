@@ -65,15 +65,17 @@ exports.handler = async function (argv) {
   const personalityName = args.personality;
   log(process.cwd(), personalityName, PERSONALITY_FILENAME);
   const personalityFilePath = path.join(process.cwd(), personalityName, PERSONALITY_FILENAME);
-  const configWatcher = chokidar.watch(personalityFilePath);
+  const personalityWatcher = chokidar.watch(personalityFilePath, {
+    ignoreInitial: true,
+    awaitWriteFinish: true,
+  });
 
-  configWatcher.on('ready', () => buildPersonality(personalityName));
-  configWatcher.on('change', (filePath) => {
+  personalityWatcher.on('ready', () => buildPersonality(personalityName));
+  personalityWatcher.on('change', (filePath) => {
     log();
-    log(`${personalityName} has changes`);
+    log(`Personality "${personalityName}" has changes`);
 
     buildPersonality(personalityName);
-
     watchScripts(personalityName, personalityFilePath);
   });
 
