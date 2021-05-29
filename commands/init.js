@@ -3,8 +3,9 @@ const fs = require('fs/promises');
 const askQuestions = require('../lib/askQuestions');
 const getEddiPersonalities = require('../lib/getEddiPersonalities');
 const personalityToFiles = require('../lib/personalityToFiles');
+const writeJson = require('../lib/writeJson');
 const log = require('../lib/log');
-const { BUILD_BAT, WATCH_BAT } = require('../lib/constants');
+const { CONFIG_FILENAME, BUILD_BAT, WATCH_BAT } = require('../lib/constants');
 
 exports.command = 'init';
 
@@ -41,13 +42,23 @@ const OPTS = {
 };
 exports.builder = OPTS;
 
+function normalizeExt(ext) {
+  return `.${ext}`.replace('..', '.');
+}
+
 exports.handler = async function (argv) {
   const args = await askQuestions(argv, OPTS);
 
   log();
   log.options(args, OPTS);
 
+  args.ext = normalizeExt(args.ext);
+
   await fs.copyFile(path.resolve(__dirname, '../template/README.md'), path.join(process.cwd(), 'README.md'));
+  await writeJson(path.join(process.cwd(), CONFIG_FILENAME), {
+    extension: args.ext,
+    templateSettings: args.templateSettings,
+  });
 
   if (args.batchFiles) {
     await fs.writeFile(path.join(process.cwd(), 'build.bat'), BUILD_BAT, 'utf-8');
