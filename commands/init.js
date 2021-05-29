@@ -1,7 +1,7 @@
 const path = require('path');
 const fs = require('fs/promises');
 const askQuestions = require('../lib/askQuestions');
-const getPersonalities = require('../lib/getPersonalities');
+const getEddiPersonalities = require('../lib/getEddiPersonalities');
 const personalityToFiles = require('../lib/personalityToFiles');
 const log = require('../lib/log');
 const { BUILD_BAT, WATCH_BAT } = require('../lib/constants');

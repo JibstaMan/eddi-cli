@@ -1,5 +1,5 @@
-const fs = require('fs/promises');
 const askQuestions = require('../lib/askQuestions');
+const getLocalPersonalities = require('../lib/getLocalPersonalities');
 const buildPersonality = require('../lib/buildPersonality');
 const log = require('../lib/log');
 
@@ -8,7 +8,7 @@ exports.command = 'build';
 exports.describe = 'Build the EDDI personality JSON from the source files';
 
 async function getOpts() {
-  const personalities = await fs.readdir(process.cwd());
+  const personalities = await getLocalPersonalities(process.cwd());
   return {
     personality: {
       alias: 'p',

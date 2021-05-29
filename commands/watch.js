@@ -1,7 +1,7 @@
 const path = require('path');
-const fs = require('fs/promises');
 const chokidar = require('chokidar')
 const askQuestions = require('../lib/askQuestions');
+const getLocalPersonalities = require('../lib/getLocalPersonalities');
 const readJson = require('../lib/readJson');
 const buildPersonality = require('../lib/buildPersonality');
 const log = require('../lib/log');
@@ -10,10 +10,10 @@ const { PERSONALITY_FILENAME } = require('../lib/constants');
 
 exports.command = 'watch';
 
-exports.describe = 'Watch the personalities for changes and immediately build them.';
+exports.describe = 'Watch the personalities for changes and immediately build them';
 
 async function getOpts() {
-  const personalities = await fs.readdir(process.cwd());
+  const personalities = await getLocalPersonalities(process.cwd());
   return {
     personality: {
       alias: 'p',
