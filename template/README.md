@@ -4,6 +4,16 @@ This project was created with the [EDDI CLI](https://github.com/jibstaman/eddi-c
 
 **Disclaimer:** This tool will stop working the moment that EDDI makes significant changes to the data structure within the personality files.
 
+## Table of content
+* [Usage](#usage)
+  * [Project initialization](#project-initialization)
+  * [Building a personality](#building-a-personality)
+  * [Watch for changes to a personality](#watch-for-changes-to-a-personality)
+  * [Adding a template to a personality](#adding-a-template-to-a-personality)
+  * [Restructuring the templates](#restructuring-the-templates)
+  * [Renaming a template](#renaming-a-template)
+* [Documentation and resources](#documentation-and-resources)
+
 ## Usage
 
 The CLI includes `--help` option to get information about its usage.
@@ -30,9 +40,29 @@ npx eddi-cli watch
 
 This will watch for file changes in the `_personality.json` file and all the files that are references within it. So when you save a template file, it will immediately `build` the entire personality and update the file that EDDI uses.
 
-## Managing files
+### Adding a template to a personality
 
-After running `init`, the CLI will have created a folder for each personality. These folders contain a special file, called `_personality.json`. This file matches the file that EDDI uses, with one exception. The `script` property has been replaced with a path towards the file containing the actual template.
+```
+npx eddi-cli create
+```
+
+After specifying all the information needed, this command will automatically create the file and add it to the `_personality.json`.
+
+### Restructuring the templates
+
+One of the benefits of using EDDI CLI is that you can structure your project whichever way you prefer. We recognize that you'd likely prefer to just use Windows Explorer to move files around and not use a CLI for this. That's why we chose to create the `reconcile` command.
+
+```
+npx eddi-cli reconcile
+```
+
+**Note: `reconcile` can't find renamed files. It's only capable of locating files moved deeper into the personality folder.**
+
+Once you've created the folder structure you want, you can run the `reconcile` command and the CLI will figure out where you moved all the files to. So now you don't have to worry about painstakingly updating the `_personality.json` to ensure it can still find all the files you moved!
+
+### Renaming a template
+
+We're under the impression that renaming a template file is not something that happens very often. That's why we've decided not to include this feature. You can rename a file yourself, as long as you also update the file name in the corresponding `script` path inside the `_personality.json`.
 
 ```
 "scripts": {
@@ -47,8 +77,6 @@ After running `init`, the CLI will have created a folder for each personality. T
     "default": true
   },
 ```
-
-You can move files around, as long as you ensure that the `script` path matches the new location of the template file. This also means that you can change the name of the file, without changing anything within EDDI itself.
 
 ## Documentation and resources
 

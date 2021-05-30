@@ -31,8 +31,8 @@ const OPTS = {
     group: 'Init options:',
   },
   batchFiles: {
+    alias: ['bat', 'b'],
     type: 'boolean',
-    alias: ['b', 'bat'],
     desc: "Whether to add batch files, so you can double-click a file instead of using a terminal",
     default: true,
     requestArg: true,
