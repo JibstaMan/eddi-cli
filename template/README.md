@@ -38,7 +38,7 @@ It's easy to forget to run the `build` command and waste time testing old templa
 npx eddi-cli watch
 ```
 
-This will watch for file changes in the `_personality.json` file and all the files that are references within it. So when you save a template file, it will immediately `build` the entire personality and update the file that EDDI uses.
+This will watch for file changes in the (local) `_personality.json` file and all the files that are references within it. So when you save a template file, it will immediately `build` the entire personality and update the file that EDDI uses.
 
 ### Adding a template to a personality
 
@@ -80,7 +80,7 @@ We're under the impression that renaming a template file is not something that h
 
 ## Documentation and resources
 
-* [EDDI CLI](https://github.com/jibstaman/eddi-cli)
+* [EDDI CLI](https://github.com/jibstaman/eddi-cli#readme)
 * [EDDI GitHub](https://github.com/EDCD/EDDI)
 * [EDDI variables](https://github.com/EDCD/EDDI/blob/develop/SpeechResponder/Variables.md)
 * [EDDI DataDefinitions source (C#)](https://github.com/EDCD/EDDI/tree/develop/DataDefinitions)

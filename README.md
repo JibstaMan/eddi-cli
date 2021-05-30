@@ -27,18 +27,18 @@ Working outside of the EDDI interface has a number of benefits:
 * Use your preferred editor.
 * View files side-by-side.
 * Create your own folder structure to make finding files a lot easier.
-* Use [Git](https://git-scm.com/) to experiment with more confidence
+* Use [Git](https://git-scm.com/) (maybe using [SourceTree](https://sourcetreeapp.com) as interface) to experiment with more confidence
   * Use branches while experimenting with new things, knowing working version is still easily accessible.
   * Open-source your templates by pushing your templates to [GitHub](https://github.com).
 
 ### Trade-offs
 
-Developers like to use the term "single source of truth". When you start using EDDI CLI, the files created by EDDI CLI are the new one-and-only location for you to work with EDDI scripts. Changes made in EDDI itself will be overwritten by the EDDI CLI. So when you do make changes in EDDI, make sure to copy them to the respective files too or they will get lost.
+Developers like to use the term "single source of truth". When you start using EDDI CLI, the files created by EDDI CLI are the new one-and-only location for you to work with EDDI scripts. Changes made in EDDI itself will be overwritten by the EDDI CLI. So when you do make changes in EDDI, make sure to copy them to the respective files too or they will be overwritten next time you `build`.
 
 ## What
  
-EDDI CLI is a command-line interface written in `NodeJS` and usable through `npx`.
-* Install [NodeJS](https://nodejs.org/en/) v14+ (`npm`/`npx` comes included).
+EDDI CLI is a command-line interface written in `NodeJS` and usable through `npx`. See [npx vs npm](#npx-vs-npm) for more info on this.
+* Install [NodeJS](https://nodejs.org/en/) v14+ (`npm`/`npx` come included).
 
 CLI means that it doesn't come with a graphical user interface. Instead, you need a terminal to interact with the program.
 
@@ -58,7 +58,7 @@ Choose the folder where you want your EDDI personalities to end up. Open a termi
 npx eddi-cli init
 ```
 
-This will create a folder for each personality that exists in EDDI. Each of these folders will have a `_personality.json` file, which serves as the entry-point for the `build` and `watch` commands. This file has references to all the template files. You can move or rename template files, as long as you also update the reference in `_personality.json`.
+This will create a folder for each personality that exists in EDDI. Each of these folders will have a `_personality.json` file, which serves as the entry-point for the `build` and `watch` commands. This file has references to all the template files. The `build` will fail when any of these references don't point to a file.
 
 ### Building a personality
 
@@ -78,7 +78,7 @@ It's easy to forget to run the `build` command and waste time testing old templa
 npx eddi-cli watch
 ```
 
-This will watch for file changes in the `_personality.json` file and all the files that are references within it. So when you save a template file, it will immediately `build` the entire personality and update the file that EDDI uses.
+This will watch for file changes in the (local) `_personality.json` file and all the files that are references within it. So when you save a template file, it will immediately `build` the entire personality and update the file that EDDI uses.
 
 ### Adding a template to a personality
 
@@ -131,20 +131,23 @@ You can also open a terminal and manually navigate to the folder from the termin
 
 ## npx vs npm
 
-The reason EDDI CLI is recommending `npx` is for convenience. You don't need to install anything, as long as you're in the correct folder, the commands will work.
+* `npm` stands for Node package manager. It's the software that NodeJS depends on for installing packages and all the dependencies.
+* `npx` stands for Node package runner. It's a convenience tool for packages that can be executed within a terminal. You don't need to first install the package using `npm`, `npx` will retrieve the necessary files for you.
 
-`npx` will get the latest version of `eddi-cli` every time, which takes about 5 seconds of time. This delay applies every time you run a command using `npx`. The benefit is that you don't have to worry about which version of `eddi-cli` is installed.
+The reason EDDI CLI is recommending `npx` is for convenience. You don't need to install anything (besides `NodeJS`), as long as you're in the correct folder, the commands will work.
 
-You can install `eddi-cli` globally:
+`npx` will get the latest version of `eddi-cli` every time (or "Just in Time"), which takes about a few seconds. This delay applies every time you run a command using `npx`. The benefit is that you don't have to worry about which version of `eddi-cli` is installed.
+
+You can install `eddi-cli` globally (note the `-g` flag), to make it available anywhere on your computer:
 
 ```
 npm install -g eddi-cli
 ```
 
-This will install the latest version at that time, but you won't get new updates automatically. You will have to re-run that command to update. You shave off 5 seconds of every command, but you're responsible for staying up-to-date. You can quickly compare the installed version to the latest version using:
+This will install the latest version at that time, but you won't get new updates automatically. You will have to re-run that command to update. You shave off a few seconds of every command and can use `eddi-cli` offline, but you're responsible for staying up-to-date. You can quickly compare the installed version to the latest version (also displayed at the top of this readme) using:
 
 ```
-npm list -g eddi-cli
+eddi-cli --version 
 npm show eddi-cli version
 ```
 
