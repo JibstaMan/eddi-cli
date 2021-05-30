@@ -1,5 +1,8 @@
 # EDDI CLI
 
+[![npm](https://badgen.net/npm/v/eddi-cli)](https://www.npmjs.com/package/eddi-cli)
+[![license](https://badgen.net/npm/license/eddi-cli)](https://github.com/JibstaMan/eddi-cli/blob/main/LICENSE)
+
 A command-line interface to help work with [EDDI](https://github.com/EDCD/EDDI) text-to-speech templates.
 
 **Disclaimer:** This tool will stop working the moment that EDDI makes significant changes to the data structure within the personality files.
