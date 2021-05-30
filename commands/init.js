@@ -5,7 +5,7 @@ const getEddiPersonalities = require('../lib/getEddiPersonalities');
 const personalityToFiles = require('../lib/personalityToFiles');
 const writeJson = require('../lib/writeJson');
 const log = require('../lib/log');
-const { CONFIG_FILENAME, BUILD_BAT, WATCH_BAT } = require('../lib/constants');
+const { CONFIG_FILENAME, BATCH_FILES } = require('../lib/constants');
 
 exports.command = 'init';
 
@@ -46,6 +46,12 @@ function normalizeExt(ext) {
   return `.${ext}`.replace('..', '.');
 }
 
+function createBatchFile(command) {
+  const content = `call npx eddi-cli ${command}
+pause`;
+  return fs.writeFile(path.join(process.cwd(), `${command}.bat`), content, 'utf-8');
+}
+
 exports.handler = async function (argv) {
   const args = await askQuestions(argv, OPTS);
 
@@ -61,8 +67,7 @@ exports.handler = async function (argv) {
   });
 
   if (args.batchFiles) {
-    await fs.writeFile(path.join(process.cwd(), 'build.bat'), BUILD_BAT, 'utf-8');
-    await fs.writeFile(path.join(process.cwd(), 'watch.bat'), WATCH_BAT, 'utf-8');
+    await Promise.all(BATCH_FILES.map(createBatchFile));
   }
 
   log('Reading personalities');
