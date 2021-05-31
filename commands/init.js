@@ -5,7 +5,7 @@ const getEddiPersonalities = require('../lib/getEddiPersonalities');
 const personalityToFiles = require('../lib/personalityToFiles');
 const writeJson = require('../lib/writeJson');
 const log = require('../lib/log');
-const { CONFIG_FILENAME, BATCH_FILES } = require('../lib/constants');
+const { CONFIG_FILENAME, BATCH_FILES, ERROR_CODES } = require('../lib/constants');
 
 exports.command = 'init';
 
@@ -52,7 +52,7 @@ pause`;
   return fs.writeFile(path.join(process.cwd(), `${command}.bat`), content, 'utf-8');
 }
 
-exports.handler = async function (argv) {
+async function init(argv) {
   const args = await askQuestions(argv, OPTS);
 
   log();
@@ -83,4 +83,14 @@ exports.handler = async function (argv) {
   }, null);
   log();
   log('DONE');
+}
+
+exports.handler = async function initCommand(argv) {
+  try {
+    await init(argv);
+  }
+  catch (e) {
+    log.error(e.message);
+    process.exit(ERROR_CODES.GENERIC_ERROR);
+  }
 }

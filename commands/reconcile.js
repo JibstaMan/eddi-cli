@@ -9,7 +9,7 @@ const writeJson = require('../lib/writeJson');
 const computeScripts = require('../lib/computeScripts');
 const log = require('../lib/log');
 
-const { PERSONALITY_FILENAME } = require('../lib/constants');
+const { PERSONALITY_FILENAME, ERROR_CODES } = require('../lib/constants');
 
 const glob = util.promisify(globCb);
 
@@ -70,7 +70,7 @@ async function checkTemplate(template, personalityDir) {
   };
 }
 
-exports.handler = async function (argv) {
+async function reconcile(argv) {
   const opts = await getOpts();
   const args = await askQuestions(argv, opts);
 
@@ -97,4 +97,14 @@ exports.handler = async function (argv) {
   log();
 
   log('DONE');
-};
+}
+
+exports.handler = async function reconcileCommand(argv) {
+  try {
+    await reconcile(argv);
+  }
+  catch (e) {
+    log.error(e.message);
+    process.exit(ERROR_CODES.GENERIC_ERROR);
+  }
+}

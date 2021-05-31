@@ -7,7 +7,7 @@ const writeJson = require('../lib/writeJson');
 const scriptToFile = require('../lib/scriptToFile');
 const log = require('../lib/log');
 
-const { CONFIG_FILENAME, PERSONALITY_FILENAME } = require('../lib/constants');
+const { CONFIG_FILENAME, PERSONALITY_FILENAME, ERROR_CODES } = require('../lib/constants');
 
 exports.command = 'create';
 
@@ -67,7 +67,7 @@ function normalizePath(filePath) {
   return filePath.replace(/^[.\\\/]*/, '');
 }
 
-exports.handler = async function (argv) {
+async function create(argv) {
   const opts = await getOpts();
   const args = await askQuestions(argv, opts);
 
@@ -112,4 +112,14 @@ exports.handler = async function (argv) {
 
   log(`Adding template to personality "${args.personality}"`);
   await writeJson(personalityFilePath, personality);
-};
+}
+
+exports.handler = async function createCommand(argv) {
+  try {
+    await create(argv);
+  }
+  catch (e) {
+    log.error(e.message);
+    process.exit(ERROR_CODES.GENERIC_ERROR);
+  }
+}
