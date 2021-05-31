@@ -1,6 +1,6 @@
 {
   "name": "eddi-cli",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Command line interface to make project-based editing of EDDI personalities possible.",
   "main": "index.js",
   "bin": {
