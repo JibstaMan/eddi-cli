@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.3.0
+
+### Improvements
+
+* Changed the order in which `init` writes files, so when it crashes on personality.json, the other files aren't written yet.
+
+### Bug fixes
+
+* Fixed bug where UTF8 BOM broke JSON.parse, which resulting in `init` not working.
+
 ## 0.2.0
 
 ### Features
