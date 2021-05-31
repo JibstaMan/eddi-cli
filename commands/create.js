@@ -20,6 +20,7 @@ async function getOpts() {
       ...personality,
       desc: 'The personality to add the template to',
       group: 'Create options:',
+      question: 'For which personality do you want to create a new template?',
     },
     templateName: {
       alias: ['template', 'name', 't'],

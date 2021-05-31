@@ -19,6 +19,7 @@ async function getOpts() {
       ...personality,
       desc: 'Only watch for changes within this personality',
       group: 'Watch options:',
+      question: 'Which personality do you want to watch for changes?',
     },
   };
 }

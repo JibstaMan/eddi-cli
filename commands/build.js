@@ -16,6 +16,7 @@ async function getOpts() {
       ...personality,
       desc: 'The personality to build',
       group: 'Build options:',
+      question: 'Which personality do you want to build?',
     },
   };
 }

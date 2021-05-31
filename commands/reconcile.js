@@ -24,6 +24,7 @@ async function getOpts() {
       ...personality,
       desc: 'The personality to reconcile the paths for',
       group: 'Reconcile options:',
+      question: 'For which personality do you want to reconcile the paths?',
     },
   };
 }
