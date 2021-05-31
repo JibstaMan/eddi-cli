@@ -60,16 +60,6 @@ async function init(argv) {
 
   args.ext = normalizeExt(args.ext);
 
-  await fs.copyFile(path.resolve(__dirname, '../template/README.md'), path.join(process.cwd(), 'README.md'));
-  await writeJson(path.join(process.cwd(), CONFIG_FILENAME), {
-    extension: args.ext,
-    templateSettings: args.templateSettings,
-  });
-
-  if (args.batchFiles) {
-    await Promise.all(BATCH_FILES.map(createBatchFile));
-  }
-
   log('Reading personalities');
   const personalities = await getEddiPersonalities();
 
@@ -81,6 +71,18 @@ async function init(argv) {
     }
     return p.then(() => personalityToFiles(personality, args));
   }, null);
+
+  log('Writing other files');
+  await fs.copyFile(path.resolve(__dirname, '../template/README.md'), path.join(process.cwd(), 'README.md'));
+  await writeJson(path.join(process.cwd(), CONFIG_FILENAME), {
+    extension: args.ext,
+    templateSettings: args.templateSettings,
+  });
+
+  if (args.batchFiles) {
+    await Promise.all(BATCH_FILES.map(createBatchFile));
+  }
+
   log();
   log('DONE');
 }
