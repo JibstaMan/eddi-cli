@@ -12,6 +12,7 @@ This project was created with the [EDDI CLI](https://github.com/jibstaman/eddi-c
   * [Adding a template to a personality](#adding-a-template-to-a-personality)
   * [Restructuring the templates](#restructuring-the-templates)
   * [Renaming a template](#renaming-a-template)
+* [Stopping a terminal process](#stopping-a-terminal-process)
 * [Documentation and resources](#documentation-and-resources)
 
 ## Usage
@@ -77,6 +78,10 @@ We're under the impression that renaming a template file is not something that h
     "default": true
   },
 ```
+
+## Stopping a terminal process
+
+If you run a command in a standard terminal, you can stop the process by pressing Ctrl+C. You can do this while being asked a question. Or in the case of `watch`, you can do it at any time.
 
 ## Documentation and resources
 
