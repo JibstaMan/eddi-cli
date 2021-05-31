@@ -12,7 +12,7 @@ const argv = yargs(hideBin(process.argv))
     log.printVerbose = argv.verbose;
   })
   .option('verbose', {
-    alias: ['debug', 'v'],
+    alias: ['debug'],
     desc: 'Whether to enable verbose logging',
     type: 'boolean',
     boolean: true,
@@ -21,5 +21,7 @@ const argv = yargs(hideBin(process.argv))
   .commandDir('../commands')
   .group(['help', 'verbose', 'version'], 'General options:')
   .help()
+  .alias('h', 'help')
   .version()
+  .alias('v', 'version')
   .argv;
