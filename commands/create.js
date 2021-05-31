@@ -46,16 +46,6 @@ async function getOpts() {
       requestArg: true,
       question: 'What should be the path to the template (e.g.  "body" or "body/custom")?'
     },
-    priority: {
-      alias: 'prio',
-      desc: 'The priority EDDI gives to this template (lower is higher priority)',
-      type: 'number',
-      default: 3,
-      validate: (number) => number > 0,
-      group: 'Create options:',
-      requestArg: true,
-      question: 'What priority should EDDI assign to this template (lower is higher priority)?'
-    },
   };
 }
 
@@ -83,7 +73,7 @@ async function create(argv) {
     name: args.templateName,
     description: args.templateDescription,
     enabled: true,
-    priority: args.priority,
+    priority: null,
     responder: false,
     script: '',
     defaultValue: '',
