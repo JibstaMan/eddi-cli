@@ -3,7 +3,7 @@ const fs = require('fs/promises');
 const util = require('util');
 const globCb = require('glob');
 const askQuestions = require('../lib/askQuestions');
-const { getPersonalityOption } = require('../lib/getLocalPersonalities');
+const { getPersonalityOption, normalizePersonality } = require('../lib/getLocalPersonalities');
 const readJson = require('../lib/readJson');
 const writeJson = require('../lib/writeJson');
 const computeScripts = require('../lib/computeScripts');
@@ -74,11 +74,12 @@ async function checkTemplate(template, personalityDir) {
 async function reconcile(argv) {
   const opts = await getOpts();
   const args = await askQuestions(argv, opts);
+  args.personality = await normalizePersonality(args.personality);
 
   log();
   log.options(args, opts);
 
-  const personalityDir = path.join(process.cwd(), args.personality);
+  const personalityDir = args.personality;
   const personalityFilePath = path.join(personalityDir, PERSONALITY_FILENAME)
 
   const personality = await readJson(personalityFilePath);

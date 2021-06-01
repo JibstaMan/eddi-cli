@@ -1,5 +1,6 @@
+const path = require('path');
 const askQuestions = require('../lib/askQuestions');
-const { getPersonalityOption } = require('../lib/getLocalPersonalities');
+const { getPersonalityOption, normalizePersonality } = require('../lib/getLocalPersonalities');
 const buildPersonality = require('../lib/buildPersonality');
 const log = require('../lib/log');
 
@@ -29,11 +30,12 @@ exports.builder = async function (yargs) {
 async function build(argv) {
   const opts = await getOpts();
   const args = await askQuestions(argv, opts);
+  args.personality = await normalizePersonality(args.personality);
 
   log();
   log.options(args, opts);
 
-  log(`Building personality "${args.personality}"`);
+  log(`Building personality "${path.basename(args.personality)}"`);
 
   await buildPersonality(args.personality);
 

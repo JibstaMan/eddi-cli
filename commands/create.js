@@ -1,7 +1,7 @@
 const path = require('path');
 const fs = require('fs/promises');
 const askQuestions = require('../lib/askQuestions');
-const { getPersonalityOption } = require('../lib/getLocalPersonalities');
+const { getPersonalityOption, normalizePersonality } = require('../lib/getLocalPersonalities');
 const readJson = require('../lib/readJson');
 const writeJson = require('../lib/writeJson');
 const scriptToFile = require('../lib/scriptToFile');
@@ -61,11 +61,12 @@ function normalizePath(filePath) {
 async function create(argv) {
   const opts = await getOpts();
   const args = await askQuestions(argv, opts);
+  args.personality = await normalizePersonality(args.personality);
 
   log();
   log.options(args, opts);
 
-  const configOpts = await readJson(path.join(process.cwd(), CONFIG_FILENAME));
+  const configOpts = await readJson(path.join(path.resolve(args.personality, '..'), CONFIG_FILENAME));
   const templateFolder = normalizePath(args.templatePath);
   const relativePath = path.join(templateFolder, `${args.templateName}${configOpts.extension}`);
 
@@ -80,7 +81,7 @@ async function create(argv) {
     default: false,
   };
 
-  const personalityDir = path.join(process.cwd(), args.personality);
+  const personalityDir = args.personality;
   const personalityFilePath = path.join(personalityDir, PERSONALITY_FILENAME)
 
   const personality = await readJson(personalityFilePath);
@@ -101,7 +102,7 @@ async function create(argv) {
     return acc;
   }, {});
 
-  log(`Adding template to personality "${args.personality}"`);
+  log(`Adding template to personality "${path.basename(args.personality)}"`);
   await writeJson(personalityFilePath, personality);
 }
 

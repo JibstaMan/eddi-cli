@@ -1,7 +1,7 @@
 const path = require('path');
 const chokidar = require('chokidar')
 const askQuestions = require('../lib/askQuestions');
-const { getPersonalityOption } = require('../lib/getLocalPersonalities');
+const { getPersonalityOption, normalizePersonality } = require('../lib/getLocalPersonalities');
 const readJson = require('../lib/readJson');
 const buildPersonality = require('../lib/buildPersonality');
 const log = require('../lib/log');
@@ -29,56 +29,57 @@ exports.builder = async function (yargs) {
   return yargs.options(opts);
 };
 
-function createWatchList(personality) {
+function createWatchList(personality, personalityDir) {
   return Object.values(personality.scripts)
-    .map((script) => path.join(process.cwd(), personality.name, script.script));
+    .map((script) => path.join(personalityDir, script.script));
 }
 
 let fileWatcher = null;
-async function watchScripts(personalityName, personalityFilePath) {
+async function watchScripts(personalityDir, personalityFilePath) {
   if (fileWatcher) {
     await fileWatcher.close();
   }
 
   const personality = await readJson(personalityFilePath);
-  fileWatcher = chokidar.watch(createWatchList(personality), {
+  fileWatcher = chokidar.watch(createWatchList(personality, personalityDir), {
     ignoreInitial: true,
     awaitWriteFinish: true,
   });
 
   fileWatcher.on('change', (filePath) => {
     log();
-    log(`${path.relative(process.cwd(), filePath)} has changed`);
-    buildPersonality(personalityName);
+    log(`${path.relative(personalityDir, filePath)} has changed`);
+    buildPersonality(personalityDir);
   });
 }
 
 exports.handler = async function (argv) {
   const opts = await getOpts();
   const args = await askQuestions(argv, opts);
+  args.personality = await normalizePersonality(args.personality);
 
   log();
   log.options(args, opts);
 
-  log(`Watching personality "${args.personality}"`);
-  log();
+  const personalityDir = args.personality;
+  const personalityFilePath = path.join(personalityDir, PERSONALITY_FILENAME);
 
-  const personalityName = args.personality;
-  log(process.cwd(), personalityName, PERSONALITY_FILENAME);
-  const personalityFilePath = path.join(process.cwd(), personalityName, PERSONALITY_FILENAME);
   const personalityWatcher = chokidar.watch(personalityFilePath, {
     ignoreInitial: true,
     awaitWriteFinish: true,
   });
 
-  personalityWatcher.on('ready', () => buildPersonality(personalityName));
+  personalityWatcher.on('ready', () => buildPersonality(personalityDir));
   personalityWatcher.on('change', (filePath) => {
     log();
-    log(`Personality "${personalityName}" has changes`);
+    log(`Personality "${path.basename(personalityDir)}" has changes`);
 
-    buildPersonality(personalityName);
-    watchScripts(personalityName, personalityFilePath);
+    buildPersonality(personalityDir);
+    watchScripts(personalityDir, personalityFilePath);
   });
 
-  watchScripts(personalityName, personalityFilePath);
+  log(`Watching personality "${path.basename(personalityDir)}"`);
+  log();
+
+  watchScripts(personalityDir, personalityFilePath);
 }
