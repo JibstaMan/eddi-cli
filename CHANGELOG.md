@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.3.1
+
+### Improvements
+
+* Personality choice now has questions formulated.
+* Added alias `-v` for `--version` and `-h` for `--help`
+* Added validation to `enabled` and `priority` when changing template setting comments.
+
+### Bug fixes
+
+* Removed priority option from create
+
 ## 0.3.0
 
 ### Improvements
