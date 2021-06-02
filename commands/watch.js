@@ -1,9 +1,11 @@
 const path = require('path');
 const chokidar = require('chokidar')
 const askQuestions = require('../lib/askQuestions');
-const { getPersonalityOption, normalizePersonality } = require('../lib/getLocalPersonalities');
-const readJson = require('../lib/readJson');
-const buildPersonality = require('../lib/buildPersonality');
+const runSafeCommand = require('../lib/util/runSafeCommand');
+const getLocalPersonalityOption = require('../lib/options/getLocalPersonalityOption');
+const normalizePersonality = require('../lib/options/normalizePersonality');
+const readJson = require('../lib/util/readJson');
+const buildPersonality = require('../lib/personality/buildPersonality');
 const log = require('../lib/log');
 
 const { PERSONALITY_FILENAME } = require('../lib/constants');
@@ -13,7 +15,7 @@ exports.command = 'watch';
 exports.describe = 'Watch the personalities for changes and immediately build them';
 
 async function getOpts() {
-  const personality = await getPersonalityOption();
+  const personality = await getLocalPersonalityOption();
   return {
     personality: {
       ...personality,
@@ -53,7 +55,7 @@ async function watchScripts(personalityDir, personalityFilePath) {
   });
 }
 
-exports.handler = async function (argv) {
+async function watch(argv) {
   const opts = await getOpts();
   const args = await askQuestions(argv, opts);
   args.personality = await normalizePersonality(args.personality);
@@ -83,3 +85,8 @@ exports.handler = async function (argv) {
 
   watchScripts(personalityDir, personalityFilePath);
 }
+
+exports.handler = async function watchCommand(argv) {
+  await runSafeCommand(watch, argv);
+}
+

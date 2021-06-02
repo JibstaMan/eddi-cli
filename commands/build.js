@@ -1,17 +1,17 @@
 const path = require('path');
 const askQuestions = require('../lib/askQuestions');
-const { getPersonalityOption, normalizePersonality } = require('../lib/getLocalPersonalities');
-const buildPersonality = require('../lib/buildPersonality');
+const runSafeCommand = require('../lib/util/runSafeCommand');
+const getLocalPersonalityOption = require('../lib/options/getLocalPersonalityOption');
+const normalizePersonality = require('../lib/options/normalizePersonality');
+const buildPersonality = require('../lib/personality/buildPersonality');
 const log = require('../lib/log');
-
-const { ERROR_CODES } = require('../lib/constants');
 
 exports.command = 'build';
 
 exports.describe = 'Build the EDDI personality JSON from the source files';
 
 async function getOpts() {
-  const personality = await getPersonalityOption();
+  const personality = await getLocalPersonalityOption();
   return {
     personality: {
       ...personality,
@@ -44,11 +44,5 @@ async function build(argv) {
 }
 
 exports.handler = async function buildCommand(argv) {
-  try {
-    await build(argv);
-  }
-  catch (e) {
-    log.error(e.message);
-    process.exit(ERROR_CODES.GENERIC_ERROR);
-  }
+  await runSafeCommand(build, argv);
 }

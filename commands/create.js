@@ -1,20 +1,22 @@
 const path = require('path');
 const fs = require('fs/promises');
 const askQuestions = require('../lib/askQuestions');
-const { getPersonalityOption, normalizePersonality } = require('../lib/getLocalPersonalities');
-const readJson = require('../lib/readJson');
-const writeJson = require('../lib/writeJson');
-const scriptToFile = require('../lib/scriptToFile');
+const runSafeCommand = require('../lib/util/runSafeCommand');
+const getLocalPersonalityOption = require('../lib/options/getLocalPersonalityOption');
+const normalizePersonality = require('../lib/options/normalizePersonality');
+const readJson = require('../lib/util/readJson');
+const writeJson = require('../lib/util/writeJson');
+const scriptToFile = require('../lib/template/writeTemplate');
 const log = require('../lib/log');
 
-const { CONFIG_FILENAME, PERSONALITY_FILENAME, ERROR_CODES } = require('../lib/constants');
+const { CONFIG_FILENAME, PERSONALITY_FILENAME } = require('../lib/constants');
 
 exports.command = 'create';
 
 exports.describe = 'Creates a new template file for a specific personality';
 
 async function getOpts() {
-  const personality = await getPersonalityOption();
+  const personality = await getLocalPersonalityOption();
   return {
     personality: {
       ...personality,
@@ -107,11 +109,5 @@ async function create(argv) {
 }
 
 exports.handler = async function createCommand(argv) {
-  try {
-    await create(argv);
-  }
-  catch (e) {
-    log.error(e.message);
-    process.exit(ERROR_CODES.GENERIC_ERROR);
-  }
+  await runSafeCommand(create, argv);
 }

@@ -3,13 +3,15 @@ const fs = require('fs/promises');
 const util = require('util');
 const globCb = require('glob');
 const askQuestions = require('../lib/askQuestions');
-const { getPersonalityOption, normalizePersonality } = require('../lib/getLocalPersonalities');
-const readJson = require('../lib/readJson');
-const writeJson = require('../lib/writeJson');
-const computeScripts = require('../lib/computeScripts');
+const runSafeCommand = require('../lib/util/runSafeCommand');
+const getLocalPersonalityOption = require('../lib/options/getLocalPersonalityOption');
+const normalizePersonality = require('../lib/options/normalizePersonality');
+const readJson = require('../lib/util/readJson');
+const writeJson = require('../lib/util/writeJson');
+const computeScripts = require('../lib/util/computeScripts');
 const log = require('../lib/log');
 
-const { PERSONALITY_FILENAME, ERROR_CODES } = require('../lib/constants');
+const { PERSONALITY_FILENAME } = require('../lib/constants');
 
 const glob = util.promisify(globCb);
 
@@ -18,7 +20,7 @@ exports.command = 'reconcile';
 exports.describee = 'Update all paths after files have been restructured'
 
 async function getOpts() {
-  const personality = await getPersonalityOption();
+  const personality = await getLocalPersonalityOption();
   return {
     personality: {
       ...personality,
@@ -102,11 +104,5 @@ async function reconcile(argv) {
 }
 
 exports.handler = async function reconcileCommand(argv) {
-  try {
-    await reconcile(argv);
-  }
-  catch (e) {
-    log.error(e.message);
-    process.exit(ERROR_CODES.GENERIC_ERROR);
-  }
+  await runSafeCommand(reconcile, argv);
 }

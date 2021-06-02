@@ -1,11 +1,12 @@
 const path = require('path');
 const fs = require('fs/promises');
 const askQuestions = require('../lib/askQuestions');
-const getEddiPersonalities = require('../lib/getEddiPersonalities');
-const personalityToFiles = require('../lib/personalityToFiles');
-const writeJson = require('../lib/writeJson');
+const runSafeCommand = require('../lib/util/runSafeCommand');
+const getEddiPersonalities = require('../lib/options/getEddiPersonalities');
+const personalityToFiles = require('../lib/personality/personalityToFiles');
+const writeJson = require('../lib/util/writeJson');
 const log = require('../lib/log');
-const { CONFIG_FILENAME, BATCH_FILES, ERROR_CODES } = require('../lib/constants');
+const { CONFIG_FILENAME, BATCH_FILES } = require('../lib/constants');
 
 exports.command = 'init';
 
@@ -88,11 +89,5 @@ async function init(argv) {
 }
 
 exports.handler = async function initCommand(argv) {
-  try {
-    await init(argv);
-  }
-  catch (e) {
-    log.error(e.message);
-    process.exit(ERROR_CODES.GENERIC_ERROR);
-  }
+  await runSafeCommand(init, argv);
 }
