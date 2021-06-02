@@ -46,19 +46,32 @@ async function diff(argv) {
   log();
   log.options(args, opts);
 
-  log(`Checking differences for "${path.basename(args.personality)}"`);
+  if (args.localPersonality === null) {
+    log.warn('It looks like no ' + log.c.em('local') + ' personalities matches the selected ' + log.c.em('EDDI') + ' personality.');
+    log.warn('So everything is different.');
+    log();
+    log('DONE');
+    return;
+  }
+
+  log('Checking differences between local personality ' + log.c.em(path.basename(args.localPersonality)) +
+    " and EDDI's " + log.c.em(path.basename(args.personality)) + '.');
   const diffMap = await diffPersonality(args.personality, args.localPersonality);
 
   log();
   Object.values(diffMap).forEach((diff) => {
     const newer = (diff.newer === 'eddi') ? 'EDDI' : 'local';
     if (diff.isUnique) {
-      log(`Template "${diff.name}" was added in`, log.em(`${newer}`));
+      log('> Template ' + log.c.em(diff.name) + ' was added in ' + log.c.em(`${newer}`) + '.');
     }
     else if (diff.isDifferent) {
-      log(`Template "${diff.name}" was last modified in`, log.em(newer));
+      log('> Template ' + log.c.em(diff.name) + ' is different. The ' + log.c.em(newer) + ' version was modified more recently.');
     }
   });
+  log();
+  log.warn('All ' + log.c.em('EDDI') + ' occurrences above are based on when the EDDI personality file was last modified. ' +
+    "Since EDDI saves all templates in the same file, EDDI CLI can't judge which version is newer. " +
+    'If ' + log.c.em('EDDI') + ' is mentioned for all differences, it just means you changed the EDDI personality after any local changes.');
 
   log();
   log('DONE');

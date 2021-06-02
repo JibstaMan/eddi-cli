@@ -66,7 +66,7 @@ async function checkTemplate(template, personalityDir) {
 
   const [filePath] = result;
   const newPath = `.\\${path.normalize(filePath)}`;
-  log(`> Template "${template.name}" will be reconciled with "${newPath}".`);
+  log('> Template ' + log.c.em(template.name) + ' will be reconciled with ' + log.c.em(newPath) + '.');
   return {
     ...template,
     script: newPath,
@@ -86,18 +86,32 @@ async function reconcile(argv) {
 
   const personality = await readJson(personalityFilePath);
 
+  log('Starting to reconcile all the templates.');
+
+  let madeAnyChanges = false;
   const scripts = await computeScripts(personality.scripts, (script) => {
-    return checkTemplate(script, personalityDir);
+    return checkTemplate(script, personalityDir)
+      .then((updatedScript) => {
+        if (!madeAnyChanges) {
+          madeAnyChanges = script !== updatedScript;
+        }
+        return updatedScript;
+      });
   });
 
-  const updatedPersonality = {
-    ...personality,
-    scripts,
-  };
-  await writeJson(personalityFilePath, updatedPersonality);
-
-  log();
-  log('If you see no logging above, all the templates are correctly linked to their respective files.')
+  if (madeAnyChanges) {
+    const updatedPersonality = {
+      ...personality,
+      scripts,
+    };
+    log();
+    log('Updating personality ' + log.c.em(path.basename(args.personality)) + ' with all the changes.');
+    await writeJson(personalityFilePath, updatedPersonality);
+  }
+  else {
+    log();
+    log.success('All the templates are correctly linked to their respective files.');
+  }
   log();
 
   log('DONE');

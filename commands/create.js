@@ -6,7 +6,7 @@ const getLocalPersonalityOption = require('../lib/options/getLocalPersonalityOpt
 const normalizePersonality = require('../lib/options/normalizePersonality');
 const readJson = require('../lib/util/readJson');
 const writeJson = require('../lib/util/writeJson');
-const scriptToFile = require('../lib/template/writeTemplate');
+const writeTemplate = require('../lib/template/writeTemplate');
 const log = require('../lib/log');
 
 const { CONFIG_FILENAME, PERSONALITY_FILENAME } = require('../lib/constants');
@@ -84,15 +84,15 @@ async function create(argv) {
   };
 
   const personalityDir = args.personality;
-  const personalityFilePath = path.join(personalityDir, PERSONALITY_FILENAME)
+  const personalityFilePath = path.join(personalityDir, PERSONALITY_FILENAME);
 
   const personality = await readJson(personalityFilePath);
 
   const folderPath = path.join(personalityDir, templateFolder);
   await fs.mkdir(folderPath, { recursive: true });
 
-  log(`Creating template at "${path.join(personalityDir, relativePath)}"`);
-  const updatedScript = await scriptToFile(personality, template, folderPath, {
+  log('Creating template at ' + log.c.em(path.join(personalityDir, relativePath)) + '.');
+  const updatedScript = await writeTemplate(personality, template, folderPath, {
     ext: configOpts.extension,
     templateSettings: configOpts.templateSettings,
     personalityDir,
@@ -104,7 +104,7 @@ async function create(argv) {
     return acc;
   }, {});
 
-  log(`Adding template to personality "${path.basename(args.personality)}"`);
+  log('Adding template to personality ' + log.c.em(path.basename(args.personality)) + '.');
   await writeJson(personalityFilePath, personality);
 }
 

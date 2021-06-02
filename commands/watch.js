@@ -50,7 +50,7 @@ async function watchScripts(personalityDir, personalityFilePath) {
 
   fileWatcher.on('change', (filePath) => {
     log();
-    log(`${path.relative(personalityDir, filePath)} has changed`);
+    log('Template ' + log.c.em(path.relative(personalityDir, filePath)) + ' has changed');
     buildPersonality(personalityDir);
   });
 }
@@ -74,13 +74,13 @@ async function watch(argv) {
   personalityWatcher.on('ready', () => buildPersonality(personalityDir));
   personalityWatcher.on('change', (filePath) => {
     log();
-    log(`Personality "${path.basename(personalityDir)}" has changes`);
+    log('Personality ' + log.c.em(path.basename(personalityDir)) + ' has changes');
 
     buildPersonality(personalityDir);
     watchScripts(personalityDir, personalityFilePath);
   });
 
-  log(`Watching personality "${path.basename(personalityDir)}"`);
+  log('Watching personality ' + log.c.em(path.basename(personalityDir)) + '.');
   log();
 
   watchScripts(personalityDir, personalityFilePath);

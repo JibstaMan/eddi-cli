@@ -50,6 +50,7 @@ function normalizeExt(ext) {
 function createBatchFile(command) {
   const content = `call npx eddi-cli ${command}
 pause`;
+  log.verbose(`> Creating "${command}.bat" file.`);
   return fs.writeFile(path.join(process.cwd(), `${command}.bat`), content, 'utf-8');
 }
 
@@ -66,7 +67,7 @@ async function init(argv) {
 
   log('Writing personalities');
   await Object.values(personalities).reduce((p, personality) => {
-    log(`> ${personality.name}`);
+    log('> Writing ' + log.c.em(personality.name) + '.');
     if (!p) {
       return personalityToFiles(personality, args);
     }
@@ -74,7 +75,9 @@ async function init(argv) {
   }, null);
 
   log('Writing other files');
+  log.verbose('> Adding "README.md" with info about EDDI CLI.')
   await fs.copyFile(path.resolve(__dirname, '../template/README.md'), path.join(process.cwd(), 'README.md'));
+  log.verbose('> Adding "eddi-cli.config.json" to store chosen project configuration.')
   await writeJson(path.join(process.cwd(), CONFIG_FILENAME), {
     extension: args.ext,
     templateSettings: args.templateSettings,

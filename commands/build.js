@@ -35,7 +35,7 @@ async function build(argv) {
   log();
   log.options(args, opts);
 
-  log(`Building personality "${path.basename(args.personality)}"`);
+  log('Building personality ' + log.c.em(path.basename(args.personality)) + '.');
 
   await buildPersonality(args.personality);
 
