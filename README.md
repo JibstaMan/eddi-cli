@@ -33,7 +33,11 @@ Working outside of the EDDI interface has a number of benefits:
 
 ### Trade-offs
 
-Developers like to use the term "single source of truth". When you start using EDDI CLI, the files created by EDDI CLI are the new one-and-only location for you to work with EDDI scripts. Changes made in EDDI itself will be overwritten by the EDDI CLI. So when you do make changes in EDDI, make sure to copy them to the respective files too or they will be overwritten next time you `build`.
+Developers like to use the term "single source of truth". When you start using EDDI CLI, the advice is to stop making edits in EDDI and always use EDDI CLI instead. Ideally, the files created by EDDI CLI are the new one-and-only location for you to work with EDDI scripts.
+
+Be careful when you run `build`, because it will overwrite any changes you made in EDDI itself. You can use `diff` to check for changes and `sync` to pull changes made in EDDI to your local files.
+
+**Currently, the only way for EDDI to become aware of the changes made after a `build` is by restarting EDDI.**
 
 ## What
  
@@ -87,6 +91,38 @@ npx eddi-cli create
 ```
 
 After specifying all the information needed, this command will automatically create the file and add it to the `_personality.json`.
+
+### Checking whether it's safe to build
+
+Sometimes it can be helpful to know whether there are any differences between the EDDI personality and the local one. You can do this with:
+
+```
+npx eddi-cli diff
+```
+
+To explain how `diff` works in more detail, let's look at an example. Since `diff` checks when a file was modified, we'll consider the following sequence of events:
+1. You changed "FSD engaged" locally.
+2. You're experimenting with "Body scanned" and made some changes to it in EDDI.
+3. You changed "Body mapped" locally.
+
+`diff` will indicate:
+1. Template "FSD engaged" is different. The ***EDDI*** version was modified more recently.
+2. Template "Body scanned" is different. The EDDI version was modified more recently.
+3. Template "Body mapped" is different. The local version was modified more recently.
+
+Since you changed the EDDI personality after changing "FSD engaged", the entire EDDI personality file was "modified more recently". This does **not** mean that you specifically edited "FSD engaged" inside EDDI, just that you made **any** changes in EDDI after the local change.
+
+### Synchronize changes from EDDI to local
+
+The option to synchronize was added to make quick experimentation within EDDI a valid use-case. You can then safely synchronize the changes you made in EDDI with the local personality. Predictably, the command is:
+
+```
+npx eddi-cli sync
+```
+
+Once you understand how `diff` works, you also understand how `sync` works.
+
+`sync` makes no assumptions, you get full control over which changes to synchronize. It will take all the differences and ask you what you want to do with each of them.
 
 ### Restructuring the templates
 
