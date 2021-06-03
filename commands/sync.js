@@ -85,7 +85,20 @@ async function sync(argv) {
   const localPersonalityDir = args.localPersonality;
 
   const rootFolder = (localPersonalityDir) ? path.resolve(args.localPersonality, '..') : process.cwd();
-  const configOpts = await readJson(path.join(rootFolder, CONFIG_FILENAME));
+  let configOpts;
+  try {
+    configOpts = await readJson(path.join(rootFolder, CONFIG_FILENAME));
+  }
+  catch (e) {
+    if (e.code === 'ENOENT') {
+      log.error('The sync command requires the information stored in ".eddi-cli-config.json". ' +
+      `You're using EDDI CLI in folder "${process.cwd()}", which doesn't have that file. ` +
+      "Please make sure you're using EDDI CLI in the correct folder. If you haven't yet initialized, " +
+      'please use `npx eddi-cli init` to start an EDDI project folder with all the necessary setup included.');
+      throw new Error("Couldn't locate ./eddi-cli-config.json");
+    }
+    throw e;
+  }
 
   const eddiPersonality = await readJson(args.personality);
 
