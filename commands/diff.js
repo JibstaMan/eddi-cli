@@ -70,7 +70,7 @@ async function diff(argv) {
   });
   log();
   log.warn('All ' + log.c.em('EDDI') + ' occurrences above are based on when the EDDI personality file was last modified. ' +
-    "Since EDDI saves all templates in the same file, EDDI CLI can't judge which version is newer. " +
+    "Since EDDI saves all templates in the same file, `eddi-cli` can't judge which version is newer. " +
     'If ' + log.c.em('EDDI') + ' is mentioned for all differences, it just means you changed the EDDI personality after any local changes.');
 
   log();

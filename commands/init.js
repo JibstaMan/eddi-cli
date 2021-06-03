@@ -75,7 +75,7 @@ async function init(argv) {
   }, null);
 
   log('Writing other files');
-  log.verbose('> Adding "README.md" with info about EDDI CLI.')
+  log.verbose('> Adding "README.md" with info about `eddi-cli`.')
   await fs.copyFile(path.resolve(__dirname, '../template/README.md'), path.join(process.cwd(), 'README.md'));
   log.verbose('> Adding "eddi-cli.config.json" to store chosen project configuration.')
   await writeJson(path.join(process.cwd(), CONFIG_FILENAME), {

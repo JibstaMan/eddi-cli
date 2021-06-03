@@ -92,8 +92,8 @@ async function sync(argv) {
   catch (e) {
     if (e.code === 'ENOENT') {
       log.error('The sync command requires the information stored in ".eddi-cli-config.json". ' +
-      `You're using EDDI CLI in folder "${process.cwd()}", which doesn't have that file. ` +
-      "Please make sure you're using EDDI CLI in the correct folder. If you haven't yet initialized, " +
+      `You're using \`eddi-cli\` in folder "${process.cwd()}", which doesn't have that file. ` +
+      "Please make sure you're using `eddi-cli` in the correct folder. If you haven't yet initialized, " +
       'please use `npx eddi-cli init` to start an EDDI project folder with all the necessary setup included.');
       throw new Error("Couldn't locate ./eddi-cli-config.json");
     }
@@ -148,7 +148,7 @@ async function sync(argv) {
   }
   log.warn('When the question states that the template was last modified in ' + log.c.em('EDDI') +
     ', it means that the EDDI personality file was modified after the ' + log.c.em('local') + ' version was modified.',
-    "Since EDDI saves all templates in one go, EDDI CLI can't judge which version is newer.");
+    "Since EDDI saves all templates in one go, `eddi-cli` can't judge which version is newer.");
   log();
 
   const answers = await inquirer.prompt(syncQuestions);
