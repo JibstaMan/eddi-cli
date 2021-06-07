@@ -3,11 +3,12 @@
 [![npm](https://badgen.net/npm/v/eddi-cli)](https://www.npmjs.com/package/eddi-cli)
 [![license](https://badgen.net/npm/license/eddi-cli)](https://github.com/JibstaMan/eddi-cli/blob/main/LICENSE)
 
-A command-line interface to help work with [EDDI](https://github.com/EDCD/EDDI) text-to-speech templates.
+A command-line interface to help work with [EDDI](https://github.com/EDCD/EDDI) text-to-speech templates as separate files.
 
 **Disclaimer:** This tool will stop working the moment that EDDI makes significant changes to the data structure within the personality files.
 
 ## Table of content
+* [Pitch](#pitch)
 * [Why](#why)
   * [Trade-offs](#trade-offs)
 * [What](#what)
@@ -20,6 +21,10 @@ A command-line interface to help work with [EDDI](https://github.com/EDCD/EDDI) 
   * [Renaming a template](#renaming-a-template)
 * [Terminal help](#terminal-help)
 * [npx vs npm](#npx-vs-npm)
+
+## Pitch
+
+Initialize in a folder of your choosing and EDDI CLI will create folders for each personality and each Cottle script will be placed in its own file. Afterwards, easily sync the contents of those files back to the EDDI personality file. Structure the files in folders to create the ideal setup for you and work in your preferred text editor.
 
 ## Why
 
@@ -63,6 +68,8 @@ npx eddi-cli init
 ```
 
 This will create a folder for each personality that exists in EDDI. Each of these folders will have a `_personality.json` file, which serves as the entry-point for the `build` and `watch` commands. This file has references to all the template files. The `build` will fail when any of these references don't point to a file.
+
+The personality folder also contains a backup folder, containing the state of the personality at the time of initialization.
 
 ### Building a personality
 
